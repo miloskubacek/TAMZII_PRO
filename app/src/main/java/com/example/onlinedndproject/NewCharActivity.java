@@ -31,7 +31,7 @@ public class NewCharActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String profName = parent.getItemAtPosition(position).toString();
-                Toast.makeText(parent.getContext(), "Selected: " + profName, Toast.LENGTH_LONG).show();
+                //Toast.makeText(parent.getContext(), "Selected: " + profName, Toast.LENGTH_LONG).show();
             }
             @Override
             public void onNothingSelected(AdapterView <?> parent) {
@@ -50,7 +50,7 @@ public class NewCharActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String raceName = parent.getItemAtPosition(position).toString();
-                Toast.makeText(parent.getContext(), "Selected: " + raceName, Toast.LENGTH_LONG).show();
+                //Toast.makeText(parent.getContext(), "Selected: " + raceName, Toast.LENGTH_LONG).show();
             }
             @Override
             public void onNothingSelected(AdapterView <?> parent) {
@@ -61,7 +61,7 @@ public class NewCharActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_chars, menu);
         return true;
     }
 }

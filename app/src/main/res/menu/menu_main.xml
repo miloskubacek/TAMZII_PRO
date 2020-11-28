@@ -4,9 +4,6 @@
     tools:context="com.example.onlinedndproject.MainActivity">
     <item android:title="Characters" android:id="@+id/menu_chars"></item>
     <item android:title="Sessions" android:id="@+id/menu_sessions">
-        <menu >
-            <item android:title="Login onto session" />
-        </menu>
     </item>
     <item android:title="Races and Professions" android:id="@+id/menu_racesAndProfs"/>
     <item android:title="Account" android:id="@+id/menu_account"/>

@@ -26,10 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -39,16 +36,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()){
             case R.id.menu_chars:
-                Intent intent = new Intent(this, NewCharActivity.class);
+                intent = new Intent(this, NewCharActivity.class);
                 this.startActivity(intent);
                 break;
+            case R.id.menu_racesAndProfs:
+                intent = new Intent(this, RaceProfActivity.class);
+                this.startActivity(intent);
+                break;
+
             case R.id.menu_sessions:
-                //Intent intent2 = new Intent(this, Main2Activity.class);
-                //this.startActivity(intent2);
+                intent = new Intent(this, SessionActivity.class);
+                this.startActivity(intent);
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
