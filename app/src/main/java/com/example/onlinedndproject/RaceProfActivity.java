@@ -2,17 +2,22 @@ package com.example.onlinedndproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
-import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class RaceProfActivity extends AppCompatActivity {
 
@@ -50,30 +55,53 @@ public class RaceProfActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<String> arrayList2 = new ArrayList<String>();
-        arrayList2.add("Paladin");
-        arrayList2.add("Wizard");
-        arrayList2.add("Barbarian");
-        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList2);
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+        DatabaseReference profRef = myRef.child("professions");
 
-        profListView = findViewById(R.id.listProfs);
-        profListView.setAdapter(arrayAdapter2);
-        profListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ValueEventListener postListener = new ValueEventListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<String> arrayList2 = new ArrayList<String>();
+                for (DataSnapshot subSnapshot: dataSnapshot.getChildren()) {
+                    int id = Integer.parseInt(subSnapshot.child("prof_id").getValue().toString());
+                    String name = subSnapshot.child("name").getValue().toString();
+                    arrayList2.add(name); //id+":" +
+                }
+                ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList2);
 
-                String myItem = (String) (profListView.getItemAtPosition(position));
-                String[] splitItem = myItem.split(":");
-                int itemId = Integer.parseInt(splitItem[1]);
+                profListView = findViewById(R.id.listProfs);
+                profListView.setAdapter(arrayAdapter2);
+                profListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                System.out.println(splitItem[1]);
+                        String myItem = (String) (profListView.getItemAtPosition(position));
+                        String[] splitItem = myItem.split(":");
+                        int itemId = Integer.parseInt(splitItem[0]);
 
-                /*Intent intent = new Intent(getApplicationContext(), DisplayItemActivity.class);
-                intent.putExtra("id", itemId);
-                startActivity(intent);
-                finish();*/
+                        /*Profession prof = ProfessionGate.selectById(itemId, database);
+
+                        Intent intent = new Intent(getApplicationContext(), NewRaceActivity.class);
+                        intent.putExtra("p_prof_name", "Barbarian");
+                        intent.putExtra("p_prof_description", "jhagsjdhajshg");
+                        intent.putExtra("p_prof_id", itemId);
+                        getApplicationContext().startActivity(intent);*/
+                    }
+                });
+
             }
-        });
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Listener Faillure");
+
+            }
+        };
+        profRef.addValueEventListener(postListener);
+
+
+
     }
 
     @Override
@@ -87,13 +115,13 @@ public class RaceProfActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.new_Race:
-                /*Intent intent = new Intent(this, NewCharActivity.class);
+                Intent intent = new Intent(this, NewRaceActivity.class);
                 this.startActivity(intent);
-                break;*/
+                break;
             case R.id.new_Prof:
-                /*Intent intent2 = new Intent(this, RaceProfActivity.class);
+                Intent intent2 = new Intent(this, NewProfActivity.class);
                 this.startActivity(intent2);
-                break;*/
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

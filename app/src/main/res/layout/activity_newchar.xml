@@ -44,7 +44,7 @@
                         android:textStyle="bold" />
 
                     <EditText
-                        android:id="@+id/CharsName"
+                        android:id="@+id/CharName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
@@ -89,7 +89,7 @@
                     android:orientation="horizontal">
 
                     <SeekBar
-                        android:id="@+id/seekBar"
+                        android:id="@+id/hpRaceBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -97,7 +97,7 @@
                         android:paddingBottom="6dp" />
 
                     <SeekBar
-                        android:id="@+id/seekBar2"
+                        android:id="@+id/atRaceBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -105,7 +105,7 @@
                         android:paddingBottom="6dp" />
 
                     <SeekBar
-                        android:id="@+id/seekBar3"
+                        android:id="@+id/dfRaceBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

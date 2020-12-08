@@ -2,9 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.onlinedndproject.MainActivity">
-    <item android:title="Characters" android:id="@+id/menu_chars"></item>
-    <item android:title="Sessions" android:id="@+id/menu_sessions">
-    </item>
+    <item android:title="Characters" android:id="@+id/menu_chars"/>
+    <item android:title="Sessions" android:id="@+id/menu_sessions"/>
+    <item android:title="Stories" android:id="@+id/menu_stories"/>
     <item android:title="Races and Professions" android:id="@+id/menu_racesAndProfs"/>
     <item android:title="Account" android:id="@+id/menu_account"/>
 </menu>

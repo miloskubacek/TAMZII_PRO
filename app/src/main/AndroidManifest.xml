@@ -10,9 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".NewCharActivity"></activity>
+        <activity android:name=".CharsActivity"></activity>
         <activity android:name=".RaceProfActivity"></activity>
         <activity android:name=".SessionActivity"></activity>
         <activity android:name=".NewSessActivity"></activity>
+        <activity android:name=".NewRaceActivity"></activity>
+        <activity android:name=".NewProfActivity"></activity>
         <activity android:name=".MainActivity"></activity>
         <activity
             android:name=".LoginActivity"
