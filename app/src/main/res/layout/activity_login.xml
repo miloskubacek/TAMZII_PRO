@@ -25,7 +25,9 @@
             android:ems="10"
             android:hint="Nickname..."
             android:inputType="textPersonName"
-            android:textAlignment="center" />
+            android:textAlignment="center">
+            <requestFocus />
+        </EditText>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

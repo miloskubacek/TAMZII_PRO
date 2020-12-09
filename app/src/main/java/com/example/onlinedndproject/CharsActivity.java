@@ -5,21 +5,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
-import java.util.Vector;
 
+import dnd_project_logic.MyCsvDatabase;
+import dnd_project_logic.RequestHandler;
 import dnd_project_logic.entities.Character;
 
 
@@ -36,48 +31,37 @@ public class CharsActivity extends AppCompatActivity {
         charsList = findViewById(R.id.listChars);
         tmpCharacter = new Character();
 
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference profRef = myRef.child("characters");
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Character> arrayList = new ArrayList<Character>();
-                Vector<String> tmpVec = new Vector<String>();
-                System.out.println(dataSnapshot.toString());
-                for (DataSnapshot subSnapshot: dataSnapshot.getChildren()) {
-                    tmpVec.clear();
-                    for (DataSnapshot subSnapshot2: subSnapshot.getChildren()) {
-                        tmpVec.add(subSnapshot2.getValue().toString());
-                    }
-                    tmpCharacter.setName(tmpVec.get(9));
-                    tmpCharacter.setChar_id(Integer.parseInt(tmpVec.get(2)));
-                    tmpCharacter.setLevel(Integer.parseInt(tmpVec.get(8)));
-                    tmpCharacter.setFk_prof_id(Integer.parseInt(tmpVec.get(5)));
-                    tmpCharacter.setFk_race_id(Integer.parseInt(tmpVec.get(6)));
+        RequestHandler RH = new RequestHandler();
+        //MyFirebaseDatabase MFD = new MyFirebaseDatabase();
+        MyCsvDatabase MCD = new MyCsvDatabase();
 
-                    arrayList.add(tmpCharacter);
-                }
-                CharViewAdapter arrayAdapter = new CharViewAdapter(getApplicationContext(), R.layout.character_adapter_view, arrayList);
-                charsList.setAdapter(arrayAdapter);
-            }
+        MCD.sendContext(getApplicationContext());
+        final ArrayList<Character> characters = RH.getGateway("characters").selectAll(MCD);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        CharViewAdapter arrayAdapter = new CharViewAdapter(getApplicationContext(), R.layout.character_adapter_view, characters);
+        charsList.setAdapter(arrayAdapter);
 
-            }
-        };
-        profRef.addValueEventListener(postListener);
 
-        /*charsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        charsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Character character = characters.get(position);
                 Intent intent = new Intent(getApplicationContext(), NewCharActivity.class);
-                intent.putExtra("id", 1);
+                intent.putExtra("char_id", character.getChar_id());
+                intent.putExtra("name", character.getName());
+                intent.putExtra("fk_player_id", character.getFk_player_id());
+                intent.putExtra("fk_race_id", character.getFk_race_id());
+                intent.putExtra("fk_prof_id", character.getFk_prof_id());
+                intent.putExtra("attack", character.getAttack());
+                intent.putExtra("health", character.getHealth());
+                intent.putExtra("deffence", character.getDeffence());
+                intent.putExtra("level", character.getLevel());
+                intent.putExtra("backstory", character.getBackstory());
+
+                intent.putExtra("mode", 1);
                 startActivity(intent);
-                finish();
             }
-        });*/
+        });
 
 
         Button button = (Button)findViewById(R.id.createCharButt);

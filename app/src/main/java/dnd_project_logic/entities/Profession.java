@@ -16,7 +16,7 @@ public class Profession extends Entity {
     public Profession(int id, String name, String description) {
         this.id = id;
         this.name = name;
-        description = description;
+        this.description = description;
     }
 
     public int getId() {

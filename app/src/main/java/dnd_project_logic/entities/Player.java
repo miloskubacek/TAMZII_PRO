@@ -1,6 +1,8 @@
 package dnd_project_logic.entities;
 
-public class Player {
+import dnd_project_logic.Entity;
+
+public class Player extends Entity {
     private String nickname;
     private String city;
     private int role;

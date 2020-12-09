@@ -12,35 +12,34 @@ import dnd_project_logic.EntityGateway;
 import dnd_project_logic.MyDatabase;
 import dnd_project_logic.RequestHandler;
 
-public class ProfessionGate implements EntityGateway<Profession> {
+public class PlayerGate implements EntityGateway<Player> {
 
-    public static Profession tmpProf = new Profession();
-    public String tableName = "professions";
+    public String tableName = "players";
     public RequestHandler requestHandler;
 
     @Override
-    public void update(Profession prof, @Nullable MyDatabase database) {
-        String tmpJson;
+    public void update(Player player, @Nullable MyDatabase database) {
+        /*String tmpJson;
         tmpJson="{\"name\":\""+prof.getName()+"\","
                 +"\"description\":\""+prof.getDescription()+"\","
                 +"\"prof_id\":\""+prof.getId()+"\","
                 +"}";
-        database.update(this.tableName, prof.getId(), tmpJson);
+        database.update(this.tableName, prof.getId(), tmpJson);*/
     }
 
     @Override
-    public void insert(Profession prof, @Nullable MyDatabase database) {
-        String tmpJson;
+    public void insert(Player player, @Nullable MyDatabase database) {
+        /*String tmpJson;
         tmpJson="{\"name\":\""+prof.getName()+"\","
                 +"\"description\":\""+prof.getDescription()+"\","
                 +"\"prof_id\":\""+prof.getId()+"\","
                 +"}";
-        database.update(this.tableName, prof.getId(), tmpJson);
+        database.update(this.tableName, prof.getId(), tmpJson);*/
     }
 
     @Override
-    public Profession selectById(int entity_id, @Nullable MyDatabase database) {
-        Profession prof = null;
+    public Player selectById(int entity_id, @Nullable MyDatabase database) {
+        Player player = null;
 
         String data = database.selectById(this.tableName, entity_id);
         JSONParser parser = new JSONParser();
@@ -48,20 +47,20 @@ public class ProfessionGate implements EntityGateway<Profession> {
         try{
             JSONObject response = new JSONObject(data);
 
-            ProfessionManager Man = (ProfessionManager)this.requestHandler.getManager(this.tableName);
-            prof = Man.process(response);
+            PlayerManager Man = (PlayerManager)this.requestHandler.getManager(this.tableName);
+            player = Man.process(response);
 
-            } catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         //Entity ent = this.requestHandler.getManager(this.tableName).process(data);
 
-        return prof;
+        return player;
     }
 
     @Override
-    public ArrayList<Profession> selectAll(@Nullable MyDatabase database){
-        ArrayList<Profession> entities = new ArrayList<>();
+    public ArrayList<Player> selectAll(@Nullable MyDatabase database){
+        ArrayList<Player> entities = new ArrayList<>();
 
         String data = database.selectAll(this.tableName);
         JSONParser parser = new JSONParser();
@@ -70,10 +69,10 @@ public class ProfessionGate implements EntityGateway<Profession> {
             JSONObject response = new JSONObject(data);
 
             for(int i=1;i<response.length();i++){
-               JSONObject tmp = response.getJSONObject(String.valueOf(i));
-               ProfessionManager Man = (ProfessionManager)this.requestHandler.getManager(this.tableName);
-               Profession ent = Man.process(tmp);
-               entities.add(ent);
+                JSONObject tmp = response.getJSONObject(String.valueOf(i));
+                PlayerManager Man = (PlayerManager)this.requestHandler.getManager(this.tableName);
+                Player ent = Man.process(tmp);
+                entities.add(ent);
             }
 
         }catch(JSONException pe) {

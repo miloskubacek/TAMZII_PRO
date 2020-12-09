@@ -1,19 +1,19 @@
 package com.example.onlinedndproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
 
+import dnd_project_logic.MyCsvDatabase;
+import dnd_project_logic.RequestHandler;
 import dnd_project_logic.entities.Player;
 
 public class LoginActivity extends AppCompatActivity {
@@ -28,50 +28,58 @@ public class LoginActivity extends AppCompatActivity {
         this.button = (Button)findViewById(R.id.butt_login);
         this.name = (EditText) findViewById(R.id.textNickname);
 
+        SharedPreferences sharedPref = LoginActivity.this.getPreferences(getApplicationContext().MODE_PRIVATE);
+        String myName = sharedPref.getString("logged_nickname", "");
+        if(!myName.isEmpty()){
+            Toast.makeText(getApplicationContext(), "Hi " + myName +", your name was filled in", Toast.LENGTH_SHORT).show();
+        }
+        name.setText(myName);
+        name.setFocusable(true);
+
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                /*RequestHandler RH = new RequestHandler();
-                MyFirebaseDatabase MFD = new MyFirebaseDatabase();
-                /*Profession prof = new Profession();
-                prof.setId(6);
-                prof.setName("Hobit");
-                prof.setDescription("Not Prof, just test");*/
+            if(name.getText().toString().isEmpty()){
+                name.setError("Please fill in your nickname");
+                return;
+            }
 
-                //RH.getGateway("professions").update(prof, MFD);
-               // System.out.println(RH.getGateway("professions").selectById(3, MFD));
-               //System.out.println(RH.getGateway("professions").selectAll(MFD));
+                RequestHandler RH = new RequestHandler();
+                //MyFirebaseDatabase MFD = new MyFirebaseDatabase();
+                MyCsvDatabase MCD = new MyCsvDatabase();
 
+                MCD.sendContext(getApplicationContext());
+                ArrayList<Player> players = RH.getGateway("players").selectAll(MCD);
 
+                SharedPreferences sharedPref = LoginActivity.this.getPreferences(getApplicationContext().MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
 
-                DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-                DatabaseReference tableRef = myRef.child("players");
-                tableRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for(DataSnapshot data : dataSnapshot.getChildren()){
-                            Player player = data.getValue(Player.class);
-                            System.out.println("Database "+player.getNickname());
-                            String input = name.getText().toString();
-                            System.out.println("Input "+input);
-                            System.out.println(player.getNickname()==input);
-                            //if(input=="Milosh"){
-                            if(true){
-                                System.out.println("Inside");
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                LoginActivity.this.startActivity(intent);
-                                finish();
-                            }
-                            int i=0;
+                for(int i=0;i<players.size();i++) {
+                    String input = name.getText().toString();
+                    if(input.equals(players.get(i).getNickname())){
+                        if(players.get(i).getActive()==0){
+                            name.setError("Im sorry, but this Player got deactivated...");
+                            editor.putString("logged_nickname", "");
+                            editor.apply();
+                            return;
                         }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+                        editor.putString("logged_nickname", input);
+                        editor.apply();
 
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        LoginActivity.this.startActivity(intent);
+                        finish();
+                        return;
+                    }
+                }
+                name.setError("Player with that nickname doesn't exist, sorry...");
+
+                editor.putString("logged_nickname", "");
+                editor.apply();
 
             }
         });
+
+
         //Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 

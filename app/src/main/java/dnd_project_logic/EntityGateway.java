@@ -9,5 +9,4 @@ public interface EntityGateway<E extends Entity> {
 
     public E selectById(int entity_id, MyDatabase database);
     public ArrayList<E> selectAll(MyDatabase database);
-
 }
