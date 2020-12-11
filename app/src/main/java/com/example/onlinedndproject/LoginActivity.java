@@ -10,12 +10,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-
-import dnd_project_logic.MyCsvDatabase;
-import dnd_project_logic.RequestHandler;
-import dnd_project_logic.entities.Player;
-
 public class LoginActivity extends AppCompatActivity {
 
     public Button button;
@@ -24,6 +18,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
         this.button = (Button)findViewById(R.id.butt_login);
         this.name = (EditText) findViewById(R.id.textNickname);
@@ -43,14 +38,25 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-                RequestHandler RH = new RequestHandler();
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.putExtra("player_id", 1);
+                intent.putExtra("player_role", 1);
+                LoginActivity.this.startActivity(intent);
+                finish();
+                return;
+
+                /*RequestHandler RH = new RequestHandler();
                 //MyFirebaseDatabase MFD = new MyFirebaseDatabase();
                 MyCsvDatabase MCD = new MyCsvDatabase();
 
                 MCD.sendContext(getApplicationContext());
                 ArrayList<Player> players = RH.getGateway("players").selectAll(MCD);
 
-                SharedPreferences sharedPref = LoginActivity.this.getPreferences(getApplicationContext().MODE_PRIVATE);
+                //MCD.update("professions", 1, "{\"prof_id\": \"6\",\"name\": \"Archer\",\"description\": \"Specialize in range bows\"}");
+
+
+
+                /*SharedPreferences sharedPref = LoginActivity.this.getPreferences(getApplicationContext().MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
 
                 for(int i=0;i<players.size();i++) {
@@ -63,9 +69,13 @@ public class LoginActivity extends AppCompatActivity {
                             return;
                         }
                         editor.putString("logged_nickname", input);
+                        editor.putInt("player_id", players.get(i).getPlayer_id());
+                        editor.putInt("player_role", players.get(i).getRole());
                         editor.apply();
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("player_id", players.get(i).getPlayer_id());
+                        intent.putExtra("player_role", players.get(i).getRole());
                         LoginActivity.this.startActivity(intent);
                         finish();
                         return;
@@ -74,8 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                 name.setError("Player with that nickname doesn't exist, sorry...");
 
                 editor.putString("logged_nickname", "");
-                editor.apply();
-
+                editor.apply();*/
             }
         });
 

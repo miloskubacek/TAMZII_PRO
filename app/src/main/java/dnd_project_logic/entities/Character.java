@@ -32,11 +32,11 @@ public class Character extends Entity {
     public Character() {
     }
 
-    public int getChar_id() {
+    public int getId() {
         return char_id;
     }
 
-    public void setChar_id(int char_id) {
+    public void setId(int char_id) {
         this.char_id = char_id;
     }
 

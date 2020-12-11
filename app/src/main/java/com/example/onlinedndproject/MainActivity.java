@@ -24,18 +24,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
+        Bundle extras = getIntent().getExtras();
         switch (item.getItemId()){
             case R.id.menu_chars:
                 intent = new Intent(this, CharsActivity.class);
+                intent.putExtra("player_id", extras.getInt("player_id"));
                 this.startActivity(intent);
                 break;
             case R.id.menu_racesAndProfs:
                 intent = new Intent(this, RaceProfActivity.class);
+                intent.putExtra("player_role", extras.getInt("player_role"));
                 this.startActivity(intent);
                 break;
 
             case R.id.menu_sessions:
                 intent = new Intent(this, SessionActivity.class);
+                intent.putExtra("player_role", extras.getInt("player_role"));
                 this.startActivity(intent);
                 break;
             case R.id.menu_stories:

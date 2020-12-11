@@ -68,7 +68,7 @@ public class CharacterGate implements EntityGateway<Character> {
         try{
             JSONObject response = new JSONObject(data);
 
-            for(int i=1;i<response.length();i++){
+            for(int i=1;i<response.length()+1;i++){
                 JSONObject tmp = response.getJSONObject(String.valueOf(i));
                 CharacterManager Man = (CharacterManager)this.requestHandler.getManager(this.tableName);
                 Character ent = Man.process(tmp);

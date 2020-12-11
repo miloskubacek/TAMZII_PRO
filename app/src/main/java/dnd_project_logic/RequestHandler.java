@@ -8,6 +8,8 @@ import dnd_project_logic.entities.PlayerGate;
 import dnd_project_logic.entities.PlayerManager;
 import dnd_project_logic.entities.ProfessionGate;
 import dnd_project_logic.entities.ProfessionManager;
+import dnd_project_logic.entities.SessionGate;
+import dnd_project_logic.entities.SessionManager;
 
 public class RequestHandler {
     Vector<EntityManager> managers;
@@ -31,6 +33,11 @@ public class RequestHandler {
         CharacterGate ChG = new CharacterGate();
         ChG.requestHandler = this;
         gateways.add(ChG);
+
+        managers.add(new SessionManager());
+        SessionGate SG = new SessionGate();
+        SG.requestHandler = this;
+        gateways.add(SG);
     }
 
     public EntityManager getManager(String tableName){
@@ -41,6 +48,8 @@ public class RequestHandler {
                 return managers.get(1);
             case "characters":
                 return managers.get(2);
+            case "sessions":
+                return managers.get(3);
             default:
                 return null;
         }
@@ -54,6 +63,8 @@ public class RequestHandler {
                 return gateways.get(1);
             case "characters":
                 return gateways.get(2);
+            case "sessions":
+                return gateways.get(3);
             default:
                 return null;
         }

@@ -112,6 +112,16 @@ public class RaceProfActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        int role = getIntent().getExtras().getInt("player_role");
+        if(role==0){
+            menu.getItem(0).setEnabled(false);
+            menu.getItem(1).setEnabled(false);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.new_Race:

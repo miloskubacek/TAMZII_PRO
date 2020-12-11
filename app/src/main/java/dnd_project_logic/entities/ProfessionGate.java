@@ -14,7 +14,6 @@ import dnd_project_logic.RequestHandler;
 
 public class ProfessionGate implements EntityGateway<Profession> {
 
-    public static Profession tmpProf = new Profession();
     public String tableName = "professions";
     public RequestHandler requestHandler;
 
@@ -54,7 +53,6 @@ public class ProfessionGate implements EntityGateway<Profession> {
             } catch (JSONException e) {
             e.printStackTrace();
         }
-        //Entity ent = this.requestHandler.getManager(this.tableName).process(data);
 
         return prof;
     }
@@ -69,7 +67,7 @@ public class ProfessionGate implements EntityGateway<Profession> {
         try{
             JSONObject response = new JSONObject(data);
 
-            for(int i=1;i<response.length();i++){
+            for(int i=1;i<response.length()+1;i++){
                JSONObject tmp = response.getJSONObject(String.valueOf(i));
                ProfessionManager Man = (ProfessionManager)this.requestHandler.getManager(this.tableName);
                Profession ent = Man.process(tmp);

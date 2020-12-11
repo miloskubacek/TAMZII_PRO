@@ -2,57 +2,59 @@ package com.example.onlinedndproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import dnd_project_logic.MyCsvDatabase;
+import dnd_project_logic.RequestHandler;
+import dnd_project_logic.entities.Session;
+
 public class SessionActivity extends AppCompatActivity {
-    ListView sessListView;
+    RecyclerView sessListView;
+    SessViewAdapter SVA;
+    ArrayList<Session> sessions;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session);
 
-        ArrayList<String> arrayList = new ArrayList<String>();
-        arrayList.add("October 2nd | BRNO | Postapo |6");
-        arrayList.add("December 5th | OLOMOUC | Fantasy |5");
-        arrayList.add("January 17th | OSTRAVA | Postapo |3");
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
+        RequestHandler RH = new RequestHandler();
+        //MyFirebaseDatabase MFD = new MyFirebaseDatabase();
+        MyCsvDatabase MCD = new MyCsvDatabase();
 
-        sessListView = findViewById(R.id.listSessions);
-        sessListView.setAdapter(arrayAdapter);
-        sessListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        MCD.sendContext(getApplicationContext());
+        sessions = RH.getGateway("sessions").selectAll(MCD);
 
-                String myItem = (String) (sessListView.getItemAtPosition(position));
-                String[] splitItem = myItem.split(":");
-                int itemId = Integer.parseInt(splitItem[1]);
 
-                System.out.println(splitItem[1]);
+        sessListView = findViewById(R.id.listSess);
+        sessListView.setLayoutManager(new LinearLayoutManager(this));
 
-                /*Intent intent = new Intent(getApplicationContext(), DisplayItemActivity.class);
-                intent.putExtra("id", itemId);
-                startActivity(intent);
-                finish();*/
-            }
-        });
+        SVA = new SessViewAdapter(sessions, getApplicationContext());
+        SVA.RC = sessListView;
+        sessListView.setAdapter(SVA);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_sess, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        int role = getIntent().getExtras().getInt("player_role");
+        if(role==0){
+            menu.getItem(0).setEnabled(false);
+        }
         return true;
     }
 
