@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_sessions:
                 intent = new Intent(this, SessionActivity.class);
                 intent.putExtra("player_role", extras.getInt("player_role"));
+                intent.putExtra("player_id", extras.getInt("player_id"));
                 this.startActivity(intent);
                 break;
             case R.id.menu_stories:

@@ -20,10 +20,12 @@ public class SessViewAdapter extends RecyclerView.Adapter<SessViewAdapter.ViewHo
     public ArrayList<Session> sessions;
     private Context context;
     public RecyclerView RC;
+    public int player_id;
 
-    public SessViewAdapter(ArrayList<Session> sessions, Context context) {
+    public SessViewAdapter(ArrayList<Session> sessions, Context context, int player_id) {
         this.sessions = sessions;
         this.context = context;
+        this.player_id = player_id;
     }
 
     @Override
@@ -32,9 +34,9 @@ public class SessViewAdapter extends RecyclerView.Adapter<SessViewAdapter.ViewHo
         convertView.setOnClickListener(new View.OnClickListener(){
                                            @Override
                                            public void onClick(View V) {
-                                               int itemPosition = RC.getChildLayoutPosition(V);
+                                               /*int itemPosition = RC.getChildLayoutPosition(V);
                                                Session session = sessions.get(itemPosition);
-                                               Intent intent = new Intent(context, NewCharActivity.class);
+                                               Intent intent = new Intent(context, NewSessActivity.class);
                                                intent.putExtra("session_id", session.getId());
                                                intent.putExtra("city", session.getCity());
                                                intent.putExtra("date", session.getStrDate());
@@ -43,7 +45,19 @@ public class SessViewAdapter extends RecyclerView.Adapter<SessViewAdapter.ViewHo
 
 
                                                intent.putExtra("mode", 1);
+                                               parent.getContext().startActivity(intent);*/
+
+                                               int itemPosition = RC.getChildLayoutPosition(V);
+                                               Session session = sessions.get(itemPosition);
+                                               Intent intent = new Intent(context, CharOnSessActivity.class);
+                                               intent.putExtra("session_id", session.getId());
+                                               intent.putExtra("player_id", player_id);
+
+
+                                               intent.putExtra("mode", 1);
                                                parent.getContext().startActivity(intent);
+
+
                                            }
                                        }
         );

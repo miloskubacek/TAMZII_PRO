@@ -10,6 +10,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
+import dnd_project_logic.MyCsvDatabase;
+import dnd_project_logic.RequestHandler;
+import dnd_project_logic.entities.Player;
+
 public class LoginActivity extends AppCompatActivity {
 
     public Button button;
@@ -38,14 +44,9 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("player_id", 1);
-                intent.putExtra("player_role", 1);
-                LoginActivity.this.startActivity(intent);
-                finish();
-                return;
 
-                /*RequestHandler RH = new RequestHandler();
+
+                RequestHandler RH = new RequestHandler();
                 //MyFirebaseDatabase MFD = new MyFirebaseDatabase();
                 MyCsvDatabase MCD = new MyCsvDatabase();
 
@@ -56,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-                /*SharedPreferences sharedPref = LoginActivity.this.getPreferences(getApplicationContext().MODE_PRIVATE);
+                SharedPreferences sharedPref = LoginActivity.this.getPreferences(getApplicationContext().MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
 
                 for(int i=0;i<players.size();i++) {
@@ -84,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                 name.setError("Player with that nickname doesn't exist, sorry...");
 
                 editor.putString("logged_nickname", "");
-                editor.apply();*/
+                editor.apply();
             }
         });
 

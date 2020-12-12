@@ -20,6 +20,7 @@
         <activity android:name=".NewRaceActivity"></activity>
         <activity android:name=".NewProfActivity"></activity>
         <activity android:name=".MainActivity"></activity>
+        <activity android:name=".CharOnSessActivity"></activity>
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"

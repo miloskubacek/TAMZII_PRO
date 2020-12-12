@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -38,7 +36,7 @@ public class RaceProfActivity extends AppCompatActivity {
 
         raceListView = findViewById(R.id.listRaces);
         raceListView.setAdapter(arrayAdapter);
-        raceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*raceListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -47,13 +45,8 @@ public class RaceProfActivity extends AppCompatActivity {
                 int itemId = Integer.parseInt(splitItem[1]);
 
                 System.out.println(splitItem[1]);
-
-                /*Intent intent = new Intent(getApplicationContext(), DisplayItemActivity.class);
-                intent.putExtra("id", itemId);
-                startActivity(intent);
-                finish();*/
             }
-        });
+        });*/
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
@@ -72,23 +65,15 @@ public class RaceProfActivity extends AppCompatActivity {
 
                 profListView = findViewById(R.id.listProfs);
                 profListView.setAdapter(arrayAdapter2);
-                profListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                /*profListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                         String myItem = (String) (profListView.getItemAtPosition(position));
                         String[] splitItem = myItem.split(":");
                         int itemId = Integer.parseInt(splitItem[0]);
-
-                        /*Profession prof = ProfessionGate.selectById(itemId, database);
-
-                        Intent intent = new Intent(getApplicationContext(), NewRaceActivity.class);
-                        intent.putExtra("p_prof_name", "Barbarian");
-                        intent.putExtra("p_prof_description", "jhagsjdhajshg");
-                        intent.putExtra("p_prof_id", itemId);
-                        getApplicationContext().startActivity(intent);*/
                     }
-                });
+                });*/
 
             }
 
@@ -99,8 +84,6 @@ public class RaceProfActivity extends AppCompatActivity {
             }
         };
         profRef.addValueEventListener(postListener);
-
-
 
     }
 

@@ -37,7 +37,7 @@ public class SessionActivity extends AppCompatActivity {
         sessListView = findViewById(R.id.listSess);
         sessListView.setLayoutManager(new LinearLayoutManager(this));
 
-        SVA = new SessViewAdapter(sessions, getApplicationContext());
+        SVA = new SessViewAdapter(sessions, getApplicationContext(), getIntent().getExtras().getInt("player_id"));
         SVA.RC = sessListView;
         sessListView.setAdapter(SVA);
     }

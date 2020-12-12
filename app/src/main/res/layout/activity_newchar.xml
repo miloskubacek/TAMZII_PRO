@@ -80,7 +80,8 @@
                             android:id="@+id/ProfessionSpinner"
                             android:layout_width="210dp"
                             android:layout_height="50dp"
-                            android:backgroundTint="#373737"
+                            android:background="#373737"
+                            android:backgroundTint="#D1D0D0"
                             android:foregroundTint="#373737"
                             android:paddingLeft="20px"
                             android:scrollbarSize="5dp"
@@ -90,7 +91,8 @@
                             android:id="@+id/RaceSpinner"
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
-                            android:backgroundTint="#373737"
+                            android:background="#373737"
+                            android:backgroundTint="#D1D0D0"
                             android:foregroundTint="#373737"
                             android:textAlignment="center" />
 
@@ -183,6 +185,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="50dp"
                         android:text="Random" />
+
                 </LinearLayout>
 
             </LinearLayout>

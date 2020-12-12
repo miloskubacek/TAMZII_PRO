@@ -181,19 +181,19 @@ public class MyCsvDatabase implements MyDatabase {
 
                 row = csvReader.readLine();
                 String[] data = row.split(",");
-                output+=""+data[0]+":{";
-                output+="\""+firstLine[0]+"\": " + data[0];
+                output+="\""+data[0]+"\":{";
+                output+="\""+firstLine[0]+"\": \"" + data[0] +"\"";
                 for(int i=1;i<firstLine.length;i++){
-                    output+=",\""+firstLine[i]+"\": " + data[i];
+                    output+=",\""+firstLine[i]+"\": \"" + data[i]+"\"";
                 }
                 output+="}";
 
                 while ((row = csvReader.readLine()) != null) {
                     data = row.split(",");
-                    output+=","+data[0]+":{";
-                    output+="\""+firstLine[0]+"\": " + data[0];
+                    output+=",\""+data[0]+"\":{";
+                    output+="\""+firstLine[0]+"\": \"" + data[0]+"\"";
                     for(int i=1;i<firstLine.length;i++){
-                        output+=",\""+firstLine[i]+"\": " + data[i];
+                        output+=",\""+firstLine[i]+"\": \"" + data[i]+"\"";
                     }
                     output+="}";
 

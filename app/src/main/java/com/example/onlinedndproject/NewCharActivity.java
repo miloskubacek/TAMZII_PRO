@@ -1,12 +1,17 @@
 package com.example.onlinedndproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -32,6 +38,7 @@ import dnd_project_logic.entities.Profession;
 
 public class NewCharActivity extends AppCompatActivity {
 
+    public Character tmp;
     public Spinner spinnerProf;
     public Spinner spinnerRace;
     public EditText charName;
@@ -39,10 +46,14 @@ public class NewCharActivity extends AppCompatActivity {
     public SeekBar hp;
     public SeekBar at;
     public SeekBar df;
+    public Button createButt;
+    public Button randomButt;
+    public Button loadButt;
 
     public int tmpHp;
     public int tmpAt;
     public int tmpDf;
+    public Bundle extras;
 
     public ArrayList<Profession> profs;
     public ArrayList<String> arrayList;
@@ -51,7 +62,7 @@ public class NewCharActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newchar);
-        Bundle extras = getIntent().getExtras();
+        extras = getIntent().getExtras();
 
         RequestHandler RH = new RequestHandler();
         //MyFirebaseDatabase MFD = new MyFirebaseDatabase();
@@ -60,17 +71,28 @@ public class NewCharActivity extends AppCompatActivity {
         MCD.sendContext(getApplicationContext());
         profs = RH.getGateway("professions").selectAll(MCD);
 
+
         charName = findViewById(R.id.CharName);
         hp = findViewById(R.id.hpRaceBar);
         at = findViewById(R.id.atRaceBar);
         df = findViewById(R.id.dfRaceBar);
         spinnerProf = findViewById(R.id.ProfessionSpinner);
         spinnerRace = findViewById(R.id.RaceSpinner);
+        createButt = (Button)findViewById(R.id.createButt);
+        randomButt = (Button)findViewById(R.id.randomButt);
+        loadButt = (Button)findViewById(R.id.loadImageButt);
         arrayList = new ArrayList<>();
 
         for(Profession prof : profs){
             arrayList.add(prof.getName());
         }
+
+        /*arrayList.add("Barbarian");
+        arrayList.add("Ranger");
+        arrayList.add("Wizard");
+        arrayList.add("Paladin");
+        arrayList.add("Warrior");*/
+
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -85,7 +107,7 @@ public class NewCharActivity extends AppCompatActivity {
         });
 
 
-        ArrayList<String> raceList = new ArrayList<>();
+        final ArrayList<String> raceList = new ArrayList<>();
         raceList.add("Orc");
         raceList.add("Human");
         raceList.add("Elf");
@@ -200,10 +222,6 @@ public class NewCharActivity extends AppCompatActivity {
         at.setOnSeekBarChangeListener(onSeekBarChangeListener);
         df.setOnSeekBarChangeListener(onSeekBarChangeListener);
 
-        Button createButt = (Button)findViewById(R.id.createButt);
-        Button randomButt = (Button)findViewById(R.id.randomButt);
-        Button loadButt = (Button)findViewById(R.id.loadImageButt);
-
         createButt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(charName.getText().toString().isEmpty()){
@@ -211,8 +229,39 @@ public class NewCharActivity extends AppCompatActivity {
                     charName.requestFocus();
                 }
                 else{
-                    finish();
-                }
+                    String output;
+                    output="{";
+                    output+="\"char_id\": " + String.valueOf(7)
+                            +"\",\"name\": " + charName.getText().toString()
+                            +"\",\"fk_player_id\": " + extras.getInt("fk_player_id")
+                            +"\",\"fk_race_id\": " + spinnerRace.getSelectedItem()
+                            +"\",\"fk_prof_id\": " + spinnerProf.getSelectedItem()
+                            +"\",\"attack\": " + at.getProgress()
+                            +"\",\"health\": " + hp.getProgress()
+                            +"\",\"deffence\": " + df.getProgress()
+                            +"\",\"level\": " + String.valueOf(1) + "\"";
+                    output+="}";
+
+                    /*String input ="\n"+ String.valueOf(7) +","+ charName.getText().toString() +",1,"+ hp.getProgress()+","+ at.getProgress()+","+ df.getProgress() +","+ extras.getInt("fk_player_id") +","+spinnerProf.getSelectedItem()+","+ spinnerRace.getSelectedItem()+", ";
+
+                    if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    }
+
+                    File sdCard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                    File dir = new File (sdCard.getAbsolutePath());
+                    dir.mkdirs();
+                    File file = new File(dir, "characters.csv");
+                    int i=0;
+                    try {
+                        BufferedWriter csvWriter = new BufferedWriter(new FileWriter(file, true));
+                        csvWriter.append(input);
+                        csvWriter.flush();
+                        csvWriter.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }*/
+                        finish();
+                    }
             }
         });
 
@@ -227,7 +276,8 @@ public class NewCharActivity extends AppCompatActivity {
                 maxstat-=random;
                 df.setProgress(maxstat);
 
-                spinnerProf.setSelection(0);
+                random = new Random().nextInt(5);
+                spinnerProf.setSelection(random);
                 random = new Random().nextInt(profs.size());
                 for(Profession prof: profs){
                     if(prof.getId()==random){
@@ -261,6 +311,12 @@ public class NewCharActivity extends AppCompatActivity {
         if(resultCode==RESULT_OK){
             if(requestCode==20){
                 Uri imageUri = data.getData();
+                String path = convertMediaUriToPath(imageUri);
+
+                SharedPreferences sharedPref = NewCharActivity.this.getPreferences(getApplicationContext().MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(String.valueOf(extras.getInt("char_id"))+"_path", path);
+                editor.apply();
                 InputStream is;
 
                 try {
@@ -270,11 +326,20 @@ public class NewCharActivity extends AppCompatActivity {
                     imageView.setImageBitmap(image);
 
                 } catch (FileNotFoundException e) {
-                    Toast.makeText(getApplicationContext(), "Image failed to load", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    public String convertMediaUriToPath(Uri uri) {
+        String [] proj={MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, proj,  null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String path = cursor.getString(column_index);
+        cursor.close();
+        return path;
     }
 
     private void setNewValues() {
@@ -293,6 +358,22 @@ public class NewCharActivity extends AppCompatActivity {
 
     private void setValues(Bundle extras) {
 
+        SharedPreferences sharedPref = NewCharActivity.this.getPreferences(getApplicationContext().MODE_PRIVATE);
+        String path = sharedPref.getString(String.valueOf(extras.getInt("char_id"))+"_path", "");
+
+        InputStream is;
+
+        try {
+            //is = getContentResolver().openInputStream(imageUri);
+            is = new FileInputStream(path);
+            Bitmap image = BitmapFactory.decodeStream(is);
+            ImageView imageView = (ImageView) findViewById(R.id.charImage);
+            imageView.setImageBitmap(image);
+
+        } catch (FileNotFoundException e) {
+            Toast.makeText(getApplicationContext(), "Image failed to load", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
 
         charName.setText(extras.getString("name"));
 
@@ -315,12 +396,73 @@ public class NewCharActivity extends AppCompatActivity {
         }
 
         spinnerRace.setSelection(extras.getInt("fk_race_id")-1);
+
+        lockButtons();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_chars, menu);
+        if(extras.getInt("mode")==0){return true;}
+        getMenuInflater().inflate(R.menu.menu_newchar, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_update_char:
+                NewCharActivity.this.unlockButtons();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void unlockButtons() {
+         hp.setOnTouchListener(null);
+         at.setOnTouchListener(null);
+         df.setOnTouchListener(null);
+
+        charName.setEnabled(true);
+        spinnerProf.setEnabled(true);
+        spinnerRace.setEnabled(true);
+
+        loadButt.setVisibility(View.VISIBLE);
+        createButt.setVisibility(View.VISIBLE);
+        createButt.setText("Update");
+
+
+    }
+    private void lockButtons(){
+        charName.setEnabled(false);
+
+        hp.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+        at.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+        df.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+
+        loadButt.setVisibility(View.GONE);
+        randomButt.setVisibility(View.GONE);
+        createButt.setVisibility(View.GONE);
+
+
+        spinnerProf.setEnabled(false);
+        spinnerRace.setEnabled(false);
+
+
     }
 }
