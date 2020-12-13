@@ -14,6 +14,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
+    public boolean onPrepareOptionsMenu (Menu menu) {
+
+        menu.getItem(2).setEnabled(false);
+        menu.getItem(4).setEnabled(false);
+
+        return true;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

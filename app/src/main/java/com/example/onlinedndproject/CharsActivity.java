@@ -25,6 +25,7 @@ public class CharsActivity extends AppCompatActivity {
     RecyclerView charsList;
     CharViewAdapter CVA;
     ArrayList<Character> characters;
+    int newCharId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +46,15 @@ public class CharsActivity extends AppCompatActivity {
         for(int i=0;i<characters.size();i++){
             Character charr = characters.get(i);
             if(charr.getFk_player_id()!=played_id){
-               characters.remove(i);
+               characters.remove(characters.indexOf(charr));
+               i--;
+            }
+            if(newCharId<charr.getId()){
+                newCharId=charr.getId();
             }
         }
+
+        newCharId++;
 
 
         charsList = findViewById(R.id.listChars);
@@ -81,6 +88,8 @@ public class CharsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), NewCharActivity.class);
                 intent.putExtra("mode", 0);
+                intent.putExtra("player_id", getIntent().getExtras().getInt("player_id"));
+                intent.putExtra("newchar_id", newCharId);
                 startActivity(intent);
             }
         });
@@ -91,6 +100,13 @@ public class CharsActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_chars, menu);
         return true;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //SecondActivity closed
+        super.onActivityResult(requestCode, resultCode, data);
+        startActivity(new Intent(getApplicationContext(), CharsActivity.class)); //reload MainActivity
+        finish();
     }
 
     @Override

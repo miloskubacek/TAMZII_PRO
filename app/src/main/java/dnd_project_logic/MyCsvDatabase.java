@@ -231,6 +231,9 @@ public class MyCsvDatabase implements MyDatabase {
             case "stories":
                 pathToCsv = "stories.csv";
                 break;
+            case "charsOnSess":
+                pathToCsv = "charsOnSessions2.csv";
+                break;
             default:
                 pathToCsv = "";
         }

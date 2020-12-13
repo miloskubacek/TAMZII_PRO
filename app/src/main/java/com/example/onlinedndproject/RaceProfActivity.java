@@ -23,6 +23,8 @@ public class RaceProfActivity extends AppCompatActivity {
     ListView raceListView;
     ListView profListView;
 
+    int newProf_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,7 @@ public class RaceProfActivity extends AppCompatActivity {
                     arrayList2.add(name); //id+":" +
                 }
                 ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, arrayList2);
+                newProf_id = arrayList2.size()+1;
 
                 profListView = findViewById(R.id.listProfs);
                 profListView.setAdapter(arrayAdapter2);
@@ -98,9 +101,9 @@ public class RaceProfActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu (Menu menu) {
         int role = getIntent().getExtras().getInt("player_role");
         if(role==0){
-            menu.getItem(0).setEnabled(false);
             menu.getItem(1).setEnabled(false);
         }
+        menu.getItem(0).setEnabled(false);
         return true;
     }
 
@@ -113,7 +116,9 @@ public class RaceProfActivity extends AppCompatActivity {
                 break;
             case R.id.new_Prof:
                 Intent intent2 = new Intent(this, NewProfActivity.class);
+                intent2.putExtra("newProf_id", newProf_id);
                 this.startActivity(intent2);
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -19,6 +19,7 @@ public class SessionActivity extends AppCompatActivity {
     RecyclerView sessListView;
     SessViewAdapter SVA;
     ArrayList<Session> sessions;
+    int sess_id;
 
 
     @Override
@@ -33,6 +34,7 @@ public class SessionActivity extends AppCompatActivity {
         MCD.sendContext(getApplicationContext());
         sessions = RH.getGateway("sessions").selectAll(MCD);
 
+        sess_id = sessions.size()+1;
 
         sessListView = findViewById(R.id.listSess);
         sessListView.setLayoutManager(new LinearLayoutManager(this));
@@ -59,10 +61,19 @@ public class SessionActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //SecondActivity closed
+        super.onActivityResult(requestCode, resultCode, data);
+        startActivity(new Intent(getApplicationContext(), SessionActivity.class)); //reload MainActivity
+        finish();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_new_sess:
                 Intent intent = new Intent(this, NewSessActivity.class);
+                intent.putExtra("sess_id", sess_id);
                 this.startActivity(intent);
                 break;
         }

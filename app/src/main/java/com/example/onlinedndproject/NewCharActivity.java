@@ -1,7 +1,9 @@
 package com.example.onlinedndproject;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,14 +22,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
@@ -49,20 +56,25 @@ public class NewCharActivity extends AppCompatActivity {
     public Button createButt;
     public Button randomButt;
     public Button loadButt;
+    public Button updateButt;
 
     public int tmpHp;
     public int tmpAt;
     public int tmpDf;
     public Bundle extras;
+    public int player_id;
 
     public ArrayList<Profession> profs;
     public ArrayList<String> arrayList;
+
+    public String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newchar);
         extras = getIntent().getExtras();
+        player_id = extras.getInt("player_id");
 
         RequestHandler RH = new RequestHandler();
         //MyFirebaseDatabase MFD = new MyFirebaseDatabase();
@@ -81,6 +93,7 @@ public class NewCharActivity extends AppCompatActivity {
         createButt = (Button)findViewById(R.id.createButt);
         randomButt = (Button)findViewById(R.id.randomButt);
         loadButt = (Button)findViewById(R.id.loadImageButt);
+        updateButt = (Button)findViewById(R.id.updateButton);
         arrayList = new ArrayList<>();
 
         for(Profession prof : profs){
@@ -242,7 +255,15 @@ public class NewCharActivity extends AppCompatActivity {
                             +"\",\"level\": " + String.valueOf(1) + "\"";
                     output+="}";
 
-                    /*String input ="\n"+ String.valueOf(7) +","+ charName.getText().toString() +",1,"+ hp.getProgress()+","+ at.getProgress()+","+ df.getProgress() +","+ extras.getInt("fk_player_id") +","+spinnerProf.getSelectedItem()+","+ spinnerRace.getSelectedItem()+", ";
+                    String input ="\n"+extras.getInt("newchar_id")+"," + charName.getText().toString() +",1," + hp.getProgress()+ "," + at.getProgress()+ "," + df.getProgress()+"," +String.valueOf(player_id) + "," +String.valueOf(spinnerRace.getSelectedItemPosition()+1)+ "," +String.valueOf(spinnerProf.getSelectedItemPosition()+1)+", ";
+
+                    SharedPreferences sharedPref = NewCharActivity.this.getPreferences(getApplicationContext().MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(String.valueOf(extras.getInt("newchar_id"))+"_path", path);
+                    editor.apply();
+
+                    if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    }
 
                     if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     }
@@ -259,8 +280,8 @@ public class NewCharActivity extends AppCompatActivity {
                         csvWriter.close();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }*/
-                        finish();
+                    }
+                    finish();
                     }
             }
         });
@@ -303,6 +324,16 @@ public class NewCharActivity extends AppCompatActivity {
                 startActivityForResult(photoPicker, 20);
             }
         });
+
+        updateButt.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                SharedPreferences sharedPref = NewCharActivity.this.getPreferences(getApplicationContext().MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(String.valueOf(extras.getInt("char_id"))+"_path", path);
+                editor.apply();
+                finish();
+            }
+        });
     }
 
     @Override
@@ -311,12 +342,8 @@ public class NewCharActivity extends AppCompatActivity {
         if(resultCode==RESULT_OK){
             if(requestCode==20){
                 Uri imageUri = data.getData();
-                String path = convertMediaUriToPath(imageUri);
+                path = convertMediaUriToPath(imageUri);
 
-                SharedPreferences sharedPref = NewCharActivity.this.getPreferences(getApplicationContext().MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(String.valueOf(extras.getInt("char_id"))+"_path", path);
-                editor.apply();
                 InputStream is;
 
                 try {
@@ -428,9 +455,7 @@ public class NewCharActivity extends AppCompatActivity {
         spinnerRace.setEnabled(true);
 
         loadButt.setVisibility(View.VISIBLE);
-        createButt.setVisibility(View.VISIBLE);
-        createButt.setText("Update");
-
+        updateButt.setVisibility(View.VISIBLE);
 
     }
     private void lockButtons(){
@@ -458,6 +483,9 @@ public class NewCharActivity extends AppCompatActivity {
         loadButt.setVisibility(View.GONE);
         randomButt.setVisibility(View.GONE);
         createButt.setVisibility(View.GONE);
+
+        TextView mainTag = (TextView)findViewById(R.id.textView4);
+        mainTag.setText("CHARACTER'S SHEET");
 
 
         spinnerProf.setEnabled(false);

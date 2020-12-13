@@ -1,5 +1,6 @@
 package com.example.onlinedndproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -7,9 +8,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import dnd_project_logic.MyFirebaseDatabase;
-import dnd_project_logic.RequestHandler;
-import dnd_project_logic.entities.Profession;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class NewProfActivity extends AppCompatActivity {
 
@@ -40,20 +40,22 @@ public class NewProfActivity extends AppCompatActivity {
             public void onClick(View v) {
                createNewProf();
                finish();
+               Intent intent2 = new Intent(getApplicationContext(), RaceProfActivity.class);
+               startActivity(intent2);
+               finish();
             }
 
         });
     }
 
     private void createNewProf() {
-        RequestHandler RH = new RequestHandler();
-        MyFirebaseDatabase MFD = new MyFirebaseDatabase();
-        Profession prof = new Profession();
-        prof.setId(6);
-        prof.setName("Hobit");
-        prof.setDescription("Not Prof, just test");
+        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference profRef = myRef.child("professions");
+        DatabaseReference child = profRef.child(String.valueOf(getIntent().getExtras().getInt("newProf_id")));
 
-        RH.getGateway("professions").update(prof, MFD);
 
+        child.child("name").setValue(profName.getText().toString());
+        child.child("description").setValue(profDes.getText().toString());
+        child.child("prof_id").setValue(getIntent().getExtras().getInt("newProf_id"));
     }
 }
